@@ -3,14 +3,7 @@ sequenceDiagram
     participant browser
     participant server
 
-    Note right of browser: The browser submits data with the form
-
-    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
-    activate server
-    server-->>browser: redirect to /notes
-    deactivate server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
     activate server
     server-->>browser: HTML document
     deactivate server
