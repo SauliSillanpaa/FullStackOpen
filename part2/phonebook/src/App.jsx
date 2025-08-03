@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import personService from './services/persons'
+
+let isError = false
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [findName, setFindName] = useState('')
+  const [notification, setNotification] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -32,6 +36,23 @@ const App = () => {
         setPersons(persons.map(p => p.id === person.id ? returnedPerson : p))
         setNewName('')
         setNewNumber('')
+
+        isError = false
+        setNotification(
+          `Updated ${newName}'s number`
+        )
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      })
+      .catch(error => {
+        isError = true
+        setNotification(
+        `Information of ${newName} has already been removed from the server`
+        )
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
       })
   }
 
@@ -59,6 +80,23 @@ const App = () => {
           setPersons(persons.concat(newPerson))
           setNewName('')
           setNewNumber('')
+
+          isError = false
+          setNotification(
+            `Added ${newName}`
+          )
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+        })
+        .catch(error => {
+          isError = true
+          setNotification(
+          `Information of ${newName} has already been removed from the server`
+          )
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })
     }
   }
@@ -72,6 +110,15 @@ const App = () => {
         .then( () => {
           console.log(persons)
           setPersons(persons.filter( p => p.id != id))
+        })
+        .catch(error => {
+          isError = true
+          setNotification(
+          `Information of ${newName} has already been removed from the server`
+          )
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })
     }
   }
@@ -94,6 +141,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+        <Notification
+          message={notification}
+          isError={isError}
+        />
         <Filter
           findName={findName}
           handleFindNameChange={handleFindNameChange}
