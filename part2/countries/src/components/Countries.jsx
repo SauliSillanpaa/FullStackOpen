@@ -1,12 +1,17 @@
-const CountryListItem = ({country}) => {
+import { useState, useEffect } from 'react'
+
+const CountryListItem = ({country, setCountriesToShow}) => {
     return (
         <li>
             {country.name.common}
+            <button onClick={() => setCountriesToShow([country])}>Show</button>
+            { /* console.log(country)*/ }
         </li>
     )
 }
 
-const SingleCountryInfo = ({country}) => {
+const SingleCountryInfo = ({country, weather}) => {
+
     return (
         <div>
             <h1>
@@ -22,22 +27,31 @@ const SingleCountryInfo = ({country}) => {
                 Languages
             </h2>
             <ul>
-                {console.log(country.languages)}
+                { /* console.log(country.languages) */ }
                 {Object.values(country.languages).map(l => (
                     <li key={l}>{l}</li>
                 ))}
             </ul>
-            <img src={country.flags.png} height="200" width="300"/>
-            {console.log(country.flags.png)}
+            <img src={country.flags.png} style={{ maxWidth: 300, maxHeight: 200, height: 'auto', width: 'auto', display: 'block' }} />
+            { /* console.log(country.flags.png) */ }
+            <h2>
+                Weather in {country.capital}
+            </h2>
+            <div>
+                { /* console.log("weather data is: " + weather) */ }
+                <p>Temperature {weather.main.temp} °C</p>
+                <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} />
+                <p>Wind {weather.wind.speed} m/s</p>
+            </div>
         </div>
 
     )
 }
 
-const Countries = ({countries, findCountry}) => {
+const Countries = ({countriesToShow, setCountriesToShow, weather}) => {
     //console.log("List of countries: ", countries)
-    let countriesToShow = countries.filter(c => c.name.common.toLowerCase().includes(findCountry.toLowerCase()))
-    console.log("Length of country array: ", countriesToShow.length)
+    // let countriesToShow = countries.filter(c => c.name.common.toLowerCase().includes(findCountry.toLowerCase()))
+    //console.log("Length of country array: ", countriesToShow.length)
 
     //showCountry('Finland')
 
@@ -50,15 +64,16 @@ const Countries = ({countries, findCountry}) => {
                     <CountryListItem
                         key={country.name.official}
                         country={country}
+                        setCountriesToShow={setCountriesToShow}
                     />
                 )}
             </ul>
         )
     } else if (countriesToShow.length === 1) {
-        {console.log(countriesToShow)}
+        { /* console.log(countriesToShow) */ }
         return (
             <div>
-                <SingleCountryInfo country={countriesToShow[0]} />
+                <SingleCountryInfo country={countriesToShow[0]} weather={weather} />
             </div>
         )
     }
